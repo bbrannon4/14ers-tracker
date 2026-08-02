@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>14ers Tracker</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+  <style>
+    :root { --done: #2e7d32; --partial: #f9a825; --none: #c62828; --neutral: #6c757d; }
+    body { background:#f6f7f4; }
+    .navbar-brand { font-weight:700; letter-spacing:.3px; }
+    #map { height: calc(100vh - 250px); min-height: 420px; border-radius: 8px; }
+    .sidebar { max-height: calc(100vh - 250px); overflow-y:auto; }
+    .hiker-list .form-check { margin-bottom:.15rem; }
+    .legend-dot { display:inline-block; width:14px; height:14px; border-radius:50%; margin-right:6px; vertical-align:middle; border:1px solid rgba(0,0,0,.35); }
+    .leaflet-popup-content { margin:10px 12px; }
+    table.leaderboard td, table.leaderboard th { vertical-align:middle; }
+    th.sortable { cursor:pointer; user-select:none; white-space:nowrap; }
+    th.sortable .arrow { opacity:.4; font-size:.8em; }
+    th.sortable.active .arrow { opacity:1; }
+    .rank-medal { font-size:1.1rem; }
+    .stat-pill { font-variant-numeric: tabular-nums; }
+    .muted-note { font-size:.85rem; color:#6c757d; }
+    .marker-count-badge { font-size:.8rem; }
+    #loadError { display:none; }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-dark bg-dark">
+    <div class="container-fluid">
+      <span class="navbar-brand mb-0 h1">⛰️ 14ers Tracker</span>
+      <span class="navbar-text text-white-50 small" id="dataStatus">Loading data…</span>
+    </div>
+  </nav>
+
+  <div class="container-fluid py-3">
+    <div id="loadError" class="alert alert-danger">
+      Couldn't load data from the Google Sheet. Check that the sheet is still shared as
+      "Anyone with the link – Viewer", then reload. <span id="loadErrorDetail" class="d-block small mt-1"></span>
+    </div>
+
+    <ul class="nav nav-tabs mb-3" id="mainTabs" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active" id="tab-leaderboard" data-bs-toggle="tab" data-bs-target="#pane-leaderboard" type="button" role="tab">🏆 Leaderboard</button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link" id="tab-map" data-bs-toggle="tab" data-bs-target="#pane-map" type="button" role="tab">🗺️ Planning Map</button>
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <!-- LEADERBOARD -->
+      <div class="tab-pane fade show active" id="pane-leaderboard" role="tabpanel">
+        <div class="d-flex flex-wrap align-items-center gap-3 mb-2">
+          <p class="muted-note mb-0">
+            Ranked from the Hike Register. <strong>Unique</strong> counts distinct peaks;
+            <strong>Total</strong> counts every summit including repeats.
+          </p>
+          <div class="form-check form-switch ms-auto">
+            <input class="form-check-input" type="checkbox" id="cmcOnlyLb">
+            <label class="form-check-label small" for="cmcOnlyLb">CMC-official peaks only</label>
+          </div>
+        </div>
+        <div class="table-responsive">
+          <table class="table table-hover table-sm leaderboard bg-white rounded shadow-sm">
+            <thead class="table-light">
+              <tr>
+                <th style="width:56px">#</th>
+                <th class="sortable" data-sort="name">Hiker <span class="arrow"></span></th>
+                <th class="sortable active text-end" data-sort="unique">Unique 14ers <span class="arrow">▼</span></th>
+                <th class="sortable text-end" data-sort="total">Total summits <span class="arrow"></span></th>
+                <th class="sortable text-end" data-sort="cmc">CMC 14ers <span class="arrow"></span></th>
+              </tr>
+            </thead>
+            <tbody id="leaderboardBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- MAP -->
+      <div class="tab-pane fade" id="pane-map" role="tabpanel">
+        <div class="row g-3">
+          <div class="col-lg-3">
+            <div class="card shadow-sm sidebar">
+              <div class="card-body">
+                <h6 class="card-title mb-2">Hikers</h6>
+                <div class="d-flex gap-2 mb-2">
+                  <button class="btn btn-sm btn-outline-secondary py-0" id="selNone">Clear</button>
+                  <button class="btn btn-sm btn-outline-secondary py-0" id="selAll">All</button>
+                </div>
+                <div class="hiker-list" id="hikerList"></div>
+                <hr class="my-2">
+                <h6 class="card-title mb-2">Filters</h6>
+                <label class="form-label small mb-1">State</label>
+                <select class="form-select form-select-sm mb-2" id="stateFilter">
+                  <option value="all">All states</option>
+                  <option value="Colorado" selected>Colorado</option>
+                  <option value="California">California</option>
+                  <option value="Washington">Washington</option>
+                </select>
+                <div class="form-check form-switch mb-2">
+                  <input class="form-check-input" type="checkbox" id="cmcOnlyMap">
+                  <label class="form-check-label small" for="cmcOnlyMap">CMC-official only</label>
+                </div>
+                <div class="form-check form-switch mb-2">
+                  <input class="form-check-input" type="checkbox" id="hideDone">
+                  <label class="form-check-label small" for="hideDone">Hide fully-summited</label>
+                </div>
+                <button class="btn btn-sm btn-outline-primary w-100" id="fitBtn">Zoom to visible peaks</button>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-9">
+            <div class="d-flex flex-wrap align-items-center gap-3 mb-2">
+              <div class="small">
+                <span class="legend-dot" style="background:var(--done)"></span>All selected done
+                <span class="legend-dot ms-2" style="background:var(--partial)"></span>Some done
+                <span class="legend-dot ms-2" style="background:var(--none)"></span>None done
+                <span class="legend-dot ms-2" style="background:var(--neutral)"></span>No one selected
+              </div>
+              <span class="badge text-bg-light border ms-auto stat-pill" id="mapSummary"></span>
+            </div>
+            <div id="map"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p class="muted-note mt-3 mb-0">
+      Live data from a shared Google Sheet · reloads on refresh ·
+      <a href="#" id="sheetLink" target="_blank" rel="noopener">open the sheet</a> ·
+      map tiles © OpenStreetMap contributors
+    </p>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+          integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="app.js"></script>
+</body>
+</html>
