@@ -312,6 +312,15 @@ function townIcon() {
 // Permanent marker labels are shown only past these zoom levels (via CSS classes
 // toggled on the map container) so the fully-zoomed-out view stays uncluttered.
 const LABEL_ZOOM = { peak: 8, th: 11, town: 11 };
+// Bind a marker's name label. With the "Icon labels" toggle on it's a permanent,
+// zoom-gated label; off, it falls back to a plain hover tooltip (the old behavior).
+function bindLabel(marker, text, cls, offset) {
+  if (document.getElementById('showLabels').checked) {
+    marker.bindTooltip(text, { permanent: true, direction: 'top', offset, className: 'mlabel ' + cls });
+  } else {
+    marker.bindTooltip(text, { direction: 'top' });
+  }
+}
 function updateLabelVisibility() {
   if (!map) return;
   const z = map.getZoom();
@@ -321,19 +330,17 @@ function updateLabelVisibility() {
   c.classList.toggle('lz-town', z >= LABEL_ZOOM.town);
 }
 
-// Clear a layer group, unbinding tooltips/popups first so permanent labels
-// don't leak orphaned DOM nodes on each re-render.
-function clearGroup(group) {
-  group.eachLayer((m) => {
-    if (m.unbindTooltip) m.unbindTooltip();
-    if (m.unbindPopup) m.unbindPopup();
-  });
-  group.clearLayers();
+// Remove all permanent label DOM. Leaflet's unbindTooltip does not reliably
+// remove permanent-tooltip elements here, so we purge them directly before each
+// re-render (every marker + label is rebuilt from scratch afterward).
+function purgeLabels() {
+  document.querySelectorAll('.leaflet-tooltip.mlabel').forEach((el) => el.remove());
 }
 
 function renderMap() {
   if (!map) return;
-  clearGroup(markerLayer);
+  purgeLabels();
+  markerLayer.clearLayers();
   const peaks = visiblePeaks();
   const n = selectedHikers.size;
   const selArr = [...selectedHikers];
@@ -345,7 +352,7 @@ function renderMap() {
     const color = colorFor(done, n);
     const marker = L.marker([p.lat, p.lon], { icon: shapeIcon('triangle', color, 15) });
     marker.bindPopup(popupHtml(p, selArr));
-    marker.bindTooltip(p.peak, { permanent: true, direction: 'top', offset: [0, -6], className: 'mlabel mlabel-peak' });
+    bindLabel(marker, p.peak, 'mlabel-peak', [0, -6]);
     markerLayer.addLayer(marker);
   }
 
@@ -362,8 +369,8 @@ function renderMap() {
 // currently-visible peaks, honoring the two filter toggles.
 function renderOverlays(peaks) {
   lineLayer.clearLayers();
-  clearGroup(thLayer);
-  clearGroup(townLayer);
+  thLayer.clearLayers();
+  townLayer.clearLayers();
 
   const showTH = document.getElementById('showTrailheads').checked;
   const showTowns = document.getElementById('showTowns').checked;
@@ -392,9 +399,9 @@ function renderOverlays(peaks) {
         { color: '#4a5568', weight: 1.6, opacity: 0.55, dashArray: '7,6' }).addTo(lineLayer);
     }
     // Trailhead marker: "TH" square, with a zoom-revealed name label.
-    L.marker([th.lat, th.lon], { icon: thIcon() })
-      .bindTooltip(th.name, { permanent: true, direction: 'top', offset: [0, -4], className: 'mlabel mlabel-th' })
-      .bindPopup(thPopupHtml(th)).addTo(thLayer);
+    const thm = L.marker([th.lat, th.lon], { icon: thIcon() }).bindPopup(thPopupHtml(th));
+    bindLabel(thm, th.name, 'mlabel-th', [0, -4]);
+    thm.addTo(thLayer);
 
     // Approach towns: a line per (trailhead, town), each town marker drawn once.
     if (showTowns) {
@@ -406,10 +413,10 @@ function renderOverlays(peaks) {
           { color: TOWN_COLOR, weight: 2.2, opacity: 0.75, dashArray: '1,9', lineCap: 'round' }).addTo(lineLayer);
         if (!drawnTowns.has(tname)) {
           drawnTowns.add(tname);
-          L.marker([t.lat, t.lon], { icon: townIcon() })
-            .bindTooltip(tname, { permanent: true, direction: 'top', offset: [0, -4], className: 'mlabel mlabel-town' })
-            .bindPopup(`<strong>${escapeHtml(tname)}</strong><br><span class="small text-muted">approach town</span>`)
-            .addTo(townLayer);
+          const tm = L.marker([t.lat, t.lon], { icon: townIcon() })
+            .bindPopup(`<strong>${escapeHtml(tname)}</strong><br><span class="small text-muted">approach town</span>`);
+          bindLabel(tm, tname, 'mlabel-town', [0, -4]);
+          tm.addTo(townLayer);
         }
       }
     }
@@ -505,7 +512,7 @@ function attachEvents() {
     selectedHikers.clear();
     renderHikerList(); renderMap();
   });
-  ['stateFilter', 'cmcOnlyMap', 'hideDone'].forEach((id) =>
+  ['stateFilter', 'cmcOnlyMap', 'hideDone', 'showLabels'].forEach((id) =>
     document.getElementById(id).addEventListener('change', renderMap));
   document.getElementById('fitBtn').addEventListener('click', fitToVisible);
 
