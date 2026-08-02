@@ -335,8 +335,9 @@ function renderOverlays(peaks) {
       if (!visible.has(normPeak(pkName))) continue;
       const pk = PEAK_BY_NAME.get(normPeak(pkName));
       if (!pk || !pk.mappable) continue;
+      // Peak → trailhead: dashed gray line.
       L.polyline([[pk.lat, pk.lon], [th.lat, th.lon]],
-        { color: '#4a5568', weight: 1.5, opacity: 0.5, dashArray: '4,5' }).addTo(lineLayer);
+        { color: '#4a5568', weight: 1.6, opacity: 0.55, dashArray: '7,6' }).addTo(lineLayer);
     }
     // Trailhead marker (square).
     L.marker([th.lat, th.lon], { icon: shapeIcon('square', TH_COLOR, 13) })
@@ -348,8 +349,9 @@ function renderOverlays(peaks) {
       for (const tname of (th.towns || [])) {
         const t = TOWNS[tname];
         if (!t) continue;
+        // Trailhead → town: dotted purple line (round caps).
         L.polyline([[th.lat, th.lon], [t.lat, t.lon]],
-          { color: TOWN_COLOR, weight: 1.5, opacity: 0.6, dashArray: '2,6' }).addTo(lineLayer);
+          { color: TOWN_COLOR, weight: 2.2, opacity: 0.75, dashArray: '1,9', lineCap: 'round' }).addTo(lineLayer);
         if (!drawnTowns.has(tname)) {
           drawnTowns.add(tname);
           L.marker([t.lat, t.lon], { icon: shapeIcon('diamond', TOWN_COLOR, 13) })
