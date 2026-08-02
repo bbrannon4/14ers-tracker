@@ -6,8 +6,6 @@
 // ---- Config -------------------------------------------------------------
 const SHEET_ID = '1NvByLvFZtVWlwqHZ6ZoQ0S8Ps_DRHhQjw3E9EmHgkoo';
 const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/edit`;
-// The map defaults to showing this hiker's progress on first load (you).
-const DEFAULT_HIKER = 'Ben';
 
 const gviz = (tab) =>
   `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(tab)}`;
@@ -148,11 +146,7 @@ function buildHikerRoster(regRows) {
     const p = (r.Person || '').trim();
     if (p) names.add(p);
   }
-  HIKERS = [...names].sort((a, b) => {
-    const ua = STATS.get(a)?.unique.size || 0;
-    const ub = STATS.get(b)?.unique.size || 0;
-    return ub - ua || a.localeCompare(b);
-  });
+  HIKERS = [...names].sort((a, b) => a.localeCompare(b));
 }
 
 // ---- Leaderboard --------------------------------------------------------
@@ -360,7 +354,6 @@ function attachEvents() {
   initMap();
   try {
     await loadData();
-    if (STATS.has(DEFAULT_HIKER)) selectedHikers.add(DEFAULT_HIKER);
     renderLeaderboard();
     renderHikerList();
     renderMap();

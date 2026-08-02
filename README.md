@@ -47,11 +47,10 @@ Tips for clean data:
 
 ## Configuration
 
-Both settings live at the top of [`app.js`](app.js):
+The sheet id lives at the top of [`app.js`](app.js):
 
 ```js
-const SHEET_ID = '…';        // the Google Sheet id
-const DEFAULT_HIKER = 'Ben'; // whose progress the map shows on first load
+const SHEET_ID = '…'; // the Google Sheet id
 ```
 
 The sheet must be shared as **"Anyone with the link – Viewer"** for the app to read it.
