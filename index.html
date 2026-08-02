@@ -43,16 +43,16 @@
 
     <ul class="nav nav-tabs mb-3" id="mainTabs" role="tablist">
       <li class="nav-item" role="presentation">
-        <button class="nav-link active" id="tab-leaderboard" data-bs-toggle="tab" data-bs-target="#pane-leaderboard" type="button" role="tab">🏆 Leaderboard</button>
+        <button class="nav-link active" id="tab-map" data-bs-toggle="tab" data-bs-target="#pane-map" type="button" role="tab">🗺️ Planning Map</button>
       </li>
       <li class="nav-item" role="presentation">
-        <button class="nav-link" id="tab-map" data-bs-toggle="tab" data-bs-target="#pane-map" type="button" role="tab">🗺️ Planning Map</button>
+        <button class="nav-link" id="tab-leaderboard" data-bs-toggle="tab" data-bs-target="#pane-leaderboard" type="button" role="tab">📋 Summit Tally</button>
       </li>
     </ul>
 
     <div class="tab-content">
       <!-- LEADERBOARD -->
-      <div class="tab-pane fade show active" id="pane-leaderboard" role="tabpanel">
+      <div class="tab-pane fade" id="pane-leaderboard" role="tabpanel">
         <div class="d-flex flex-wrap align-items-center gap-3 mb-2">
           <p class="muted-note mb-0">
             Ranked from the Hike Register. <strong>Unique</strong> counts distinct peaks;
@@ -80,7 +80,7 @@
       </div>
 
       <!-- MAP -->
-      <div class="tab-pane fade" id="pane-map" role="tabpanel">
+      <div class="tab-pane fade show active" id="pane-map" role="tabpanel">
         <div class="row g-3">
           <div class="col-lg-3">
             <div class="card shadow-sm sidebar">
@@ -115,9 +115,9 @@
           <div class="col-lg-9">
             <div class="d-flex flex-wrap align-items-center gap-3 mb-2">
               <div class="small">
-                <span class="legend-dot" style="background:var(--done)"></span>All selected done
-                <span class="legend-dot ms-2" style="background:var(--partial)"></span>Some done
-                <span class="legend-dot ms-2" style="background:var(--none)"></span>None done
+                <span class="legend-dot" style="background:var(--done)"></span>All summited
+                <span class="legend-dot ms-2" style="background:var(--partial)"></span>Some summited
+                <span class="legend-dot ms-2" style="background:var(--none)"></span>None summited
                 <span class="legend-dot ms-2" style="background:var(--neutral)"></span>No one selected
               </div>
               <span class="badge text-bg-light border ms-auto stat-pill" id="mapSummary"></span>

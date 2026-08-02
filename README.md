@@ -2,12 +2,12 @@
 
 A lightweight, free web app that reads a shared **Google Sheet** live and shows:
 
-- **🏆 Leaderboard** — hikers ranked by **unique 14ers** summited and **total summits** (including repeats), with a CMC-official-only toggle.
 - **🗺️ Planning Map** — pick one or more hikers and see every peak colored by progress:
   - 🟢 **green** — all selected hikers have summited it
   - 🟡 **yellow** — some but not all have
   - 🔴 **red** — none of them have
   - ⚪ **gray** — no one selected
+- **📋 Summit Tally** — hikers ranked by **unique 14ers** summited and **total summits** (including repeats), with a CMC-official-only toggle.
 
 No build step, no API key, no server — just static files on GitHub Pages.
 

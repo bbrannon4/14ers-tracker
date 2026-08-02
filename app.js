@@ -259,7 +259,7 @@ function renderMap() {
 
   const summary = n === 0
     ? `${peaks.length} peaks shown · select hikers to color them`
-    : `${doneAll} / ${peaks.length} shown peaks done by all ${n} selected`;
+    : `${doneAll} / ${peaks.length} shown peaks summited by all ${n} selected`;
   document.getElementById('mapSummary').textContent = summary;
 }
 
