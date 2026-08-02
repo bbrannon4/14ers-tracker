@@ -23,6 +23,7 @@ let SUMMITERS = new Map();
 let TRAILHEADS = [];         // [{name, lat, lon, towns:[name], peaks:[name]}]
 let TOWNS = {};              // name -> {lat, lon}
 let TH_BY_PEAK = new Map();  // normPeak(peak) -> trailhead object
+let PEAK_URLS = {};          // normPeak(peak) -> 14ers.com page URL (Colorado only)
 
 let map, markerLayer, lineLayer, thLayer, townLayer;
 const selectedHikers = new Set();
@@ -166,6 +167,7 @@ function buildTrailheads(data) {
   for (const th of TRAILHEADS) {
     for (const pk of (th.peaks || [])) TH_BY_PEAK.set(normPeak(pk), th);
   }
+  PEAK_URLS = (data && data.peakUrls) || {};
 }
 
 // ---- Leaderboard --------------------------------------------------------
@@ -388,10 +390,14 @@ function popupHtml(p, selArr) {
   const thLine = th
     ? `<div class="small mt-1">🥾 ${escapeHtml(th.name)}<br><span class="text-muted">Town${th.towns.length === 1 ? '' : 's'}: ${th.towns.map(escapeHtml).join(', ')}</span></div>`
     : '';
+  const url = PEAK_URLS[normPeak(p.peak)];
+  const link = url
+    ? `<div class="small mt-1"><a href="${url}" target="_blank" rel="noopener">View on 14ers.com ↗</a></div>`
+    : '';
   return `<strong>${escapeHtml(p.peak)}</strong><br>
     <span class="text-muted small">${escapeHtml(p.range)}${p.range ? ' · ' : ''}${elev}</span>
     <div class="small mt-1">${total} total summiter${total === 1 ? '' : 's'} in the group${p.cmc.toLowerCase() === 'yes' ? ' · CMC 14er' : ''}</div>
-    ${thLine}${who}`;
+    ${thLine}${link}${who}`;
 }
 
 function fitToVisible() {
