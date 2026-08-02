@@ -260,6 +260,26 @@ function getCss(v) {
   return getComputedStyle(document.documentElement).getPropertyValue(v).trim();
 }
 
+// A Leaflet divIcon drawn as an SVG shape so peaks / trailheads / towns are
+// distinguishable by shape (triangle / square / diamond), not just color.
+function shapeIcon(shape, color, size) {
+  const s = size;
+  const stroke = '#1a202c';
+  let inner;
+  if (shape === 'square') {
+    inner = `<rect x="1" y="1" width="${s - 2}" height="${s - 2}" fill="${color}" stroke="${stroke}"/>`;
+  } else if (shape === 'diamond') {
+    inner = `<polygon points="${s / 2},0.5 ${s - 0.5},${s / 2} ${s / 2},${s - 0.5} 0.5,${s / 2}" fill="${color}" stroke="${stroke}"/>`;
+  } else { // triangle
+    inner = `<polygon points="${s / 2},1 ${s - 1},${s - 1} 1,${s - 1}" fill="${color}" stroke="${stroke}"/>`;
+  }
+  const svg = `<svg width="${s}" height="${s}" viewBox="0 0 ${s} ${s}" style="display:block">${inner}</svg>`;
+  return L.divIcon({
+    html: svg, className: 'shape-marker',
+    iconSize: [s, s], iconAnchor: [s / 2, s / 2], popupAnchor: [0, -s / 2],
+  });
+}
+
 function renderMap() {
   if (!map) return;
   markerLayer.clearLayers();
@@ -272,9 +292,7 @@ function renderMap() {
     const done = countDone(p);
     if (n > 0 && done === n) doneAll++;
     const color = colorFor(done, n);
-    const marker = L.circleMarker([p.lat, p.lon], {
-      radius: 6, color: '#222', weight: 1, fillColor: color, fillOpacity: 0.9,
-    });
+    const marker = L.marker([p.lat, p.lon], { icon: shapeIcon('triangle', color, 15) });
     marker.bindPopup(popupHtml(p, selArr));
     marker.bindTooltip(p.peak, { direction: 'top' });
     markerLayer.addLayer(marker);
@@ -320,10 +338,9 @@ function renderOverlays(peaks) {
       L.polyline([[pk.lat, pk.lon], [th.lat, th.lon]],
         { color: '#4a5568', weight: 1.5, opacity: 0.5, dashArray: '4,5' }).addTo(lineLayer);
     }
-    // Trailhead marker.
-    L.circleMarker([th.lat, th.lon], {
-      radius: 5, color: '#1a202c', weight: 1, fillColor: TH_COLOR, fillOpacity: 1,
-    }).bindTooltip('🅟 ' + th.name, { direction: 'top' })
+    // Trailhead marker (square).
+    L.marker([th.lat, th.lon], { icon: shapeIcon('square', TH_COLOR, 13) })
+      .bindTooltip('🅟 ' + th.name, { direction: 'top' })
       .bindPopup(thPopupHtml(th)).addTo(thLayer);
 
     // Approach towns: a line per (trailhead, town), each town marker drawn once.
@@ -335,9 +352,8 @@ function renderOverlays(peaks) {
           { color: TOWN_COLOR, weight: 1.5, opacity: 0.6, dashArray: '2,6' }).addTo(lineLayer);
         if (!drawnTowns.has(tname)) {
           drawnTowns.add(tname);
-          L.circleMarker([t.lat, t.lon], {
-            radius: 5, color: '#1a202c', weight: 1, fillColor: TOWN_COLOR, fillOpacity: 1,
-          }).bindTooltip('🏘 ' + tname, { direction: 'top' })
+          L.marker([t.lat, t.lon], { icon: shapeIcon('diamond', TOWN_COLOR, 13) })
+            .bindTooltip('🏘 ' + tname, { direction: 'top' })
             .bindPopup(`<strong>${escapeHtml(tname)}</strong><br><span class="small text-muted">approach town</span>`)
             .addTo(townLayer);
         }

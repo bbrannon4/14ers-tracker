@@ -15,6 +15,8 @@
     .sidebar { max-height: calc(100vh - 250px); overflow-y:auto; }
     .hiker-list .form-check { margin-bottom:.15rem; }
     .legend-dot { display:inline-block; width:14px; height:14px; border-radius:50%; margin-right:6px; vertical-align:middle; border:1px solid rgba(0,0,0,.35); }
+    .shape-marker { background:none; border:0; }
+    .lg { vertical-align:middle; margin-right:3px; }
     .leaflet-popup-content { margin:10px 12px; }
     table.leaderboard td, table.leaderboard th { vertical-align:middle; }
     th.sortable { cursor:pointer; user-select:none; white-space:nowrap; }
@@ -125,12 +127,12 @@
           <div class="col-lg-9">
             <div class="d-flex flex-wrap align-items-center gap-3 mb-2">
               <div class="small">
-                <span class="legend-dot" style="background:var(--done)"></span>All summited
-                <span class="legend-dot ms-2" style="background:var(--partial)"></span>Some summited
-                <span class="legend-dot ms-2" style="background:var(--none)"></span>None summited
-                <span class="legend-dot ms-2" style="background:var(--neutral)"></span>No one selected
-                <span id="legendTH" style="display:none"><span class="legend-dot ms-2" style="background:#2b6cb0"></span>Trailhead</span>
-                <span id="legendTown" style="display:none"><span class="legend-dot ms-2" style="background:#6b46c1"></span>Approach town</span>
+                <svg width="12" height="12" viewBox="0 0 12 12" class="lg"><polygon points="6,1 11,11 1,11" fill="#2e7d32" stroke="rgba(0,0,0,.4)"/></svg>All summited
+                <svg width="12" height="12" viewBox="0 0 12 12" class="lg ms-2"><polygon points="6,1 11,11 1,11" fill="#f9a825" stroke="rgba(0,0,0,.4)"/></svg>Some summited
+                <svg width="12" height="12" viewBox="0 0 12 12" class="lg ms-2"><polygon points="6,1 11,11 1,11" fill="#c62828" stroke="rgba(0,0,0,.4)"/></svg>None summited
+                <svg width="12" height="12" viewBox="0 0 12 12" class="lg ms-2"><polygon points="6,1 11,11 1,11" fill="#6c757d" stroke="rgba(0,0,0,.4)"/></svg>No one selected
+                <span id="legendTH" style="display:none"><svg width="12" height="12" viewBox="0 0 12 12" class="lg ms-2"><rect x="1" y="1" width="10" height="10" fill="#2b6cb0" stroke="rgba(0,0,0,.4)"/></svg>Trailhead</span>
+                <span id="legendTown" style="display:none"><svg width="12" height="12" viewBox="0 0 12 12" class="lg ms-2"><polygon points="6,1 11,6 6,11 1,6" fill="#6b46c1" stroke="rgba(0,0,0,.4)"/></svg>Approach town</span>
               </div>
               <span class="badge text-bg-light border ms-auto stat-pill" id="mapSummary"></span>
             </div>
@@ -152,6 +154,6 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
           integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
   <!-- Bump ?v= whenever app.js changes so browsers fetch the new file. -->
-  <script src="app.js?v=3"></script>
+  <script src="app.js?v=4"></script>
 </body>
 </html>
