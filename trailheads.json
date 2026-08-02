@@ -1,0 +1,732 @@
+{
+  "_note": "GUI-only data for the 14ers Tracker map. Trailhead coordinates are approximate standard-route trailhead locations; edit freely. Peak names must match the '14ers' sheet tab.",
+  "towns": {
+    "Aspen": {
+      "lat": 39.1911,
+      "lon": -106.8175
+    },
+    "Old Snowmass": {
+      "lat": 39.2705,
+      "lon": -106.9865
+    },
+    "Basalt": {
+      "lat": 39.3689,
+      "lon": -107.0328
+    },
+    "Georgetown": {
+      "lat": 39.7061,
+      "lon": -105.6972
+    },
+    "Silver Plume": {
+      "lat": 39.6947,
+      "lon": -105.7269
+    },
+    "Grant": {
+      "lat": 39.463,
+      "lon": -105.658
+    },
+    "Idaho Springs": {
+      "lat": 39.7425,
+      "lon": -105.5136
+    },
+    "Estes Park": {
+      "lat": 40.3772,
+      "lon": -105.5217
+    },
+    "Manitou Springs": {
+      "lat": 38.8597,
+      "lon": -104.9172
+    },
+    "Alma": {
+      "lat": 39.2828,
+      "lon": -106.0642
+    },
+    "Fairplay": {
+      "lat": 39.2247,
+      "lon": -106.0021
+    },
+    "Leadville": {
+      "lat": 39.2508,
+      "lon": -106.2925
+    },
+    "Twin Lakes": {
+      "lat": 39.0819,
+      "lon": -106.3803
+    },
+    "Minturn": {
+      "lat": 39.5875,
+      "lon": -106.4314
+    },
+    "Vail": {
+      "lat": 39.6403,
+      "lon": -106.3742
+    },
+    "Buena Vista": {
+      "lat": 38.8422,
+      "lon": -106.1311
+    },
+    "Nathrop": {
+      "lat": 38.7461,
+      "lon": -106.108
+    },
+    "Salida": {
+      "lat": 38.5347,
+      "lon": -105.9989
+    },
+    "Poncha Springs": {
+      "lat": 38.5122,
+      "lon": -106.0755
+    },
+    "Granite": {
+      "lat": 39.0433,
+      "lon": -106.2652
+    },
+    "Breckenridge": {
+      "lat": 39.4817,
+      "lon": -106.0384
+    },
+    "Fort Garland": {
+      "lat": 37.4275,
+      "lon": -105.4319
+    },
+    "Blanca": {
+      "lat": 37.4319,
+      "lon": -105.5136
+    },
+    "Alamosa": {
+      "lat": 37.4695,
+      "lon": -105.87
+    },
+    "Gardner": {
+      "lat": 37.7847,
+      "lon": -105.1741
+    },
+    "Walsenburg": {
+      "lat": 37.6244,
+      "lon": -104.7808
+    },
+    "Westcliffe": {
+      "lat": 38.1347,
+      "lon": -105.465
+    },
+    "Crestone": {
+      "lat": 37.9961,
+      "lon": -105.6925
+    },
+    "San Luis": {
+      "lat": 37.2019,
+      "lon": -105.4222
+    },
+    "Lake City": {
+      "lat": 38.0294,
+      "lon": -107.3153
+    },
+    "Silverton": {
+      "lat": 37.8119,
+      "lon": -107.6645
+    },
+    "Durango": {
+      "lat": 37.2753,
+      "lon": -107.8801
+    },
+    "Ouray": {
+      "lat": 38.0228,
+      "lon": -107.6714
+    },
+    "Telluride": {
+      "lat": 37.9375,
+      "lon": -107.8123
+    },
+    "Rico": {
+      "lat": 37.6919,
+      "lon": -108.0301
+    },
+    "Gunnison": {
+      "lat": 38.5458,
+      "lon": -106.9253
+    },
+    "Creede": {
+      "lat": 37.8492,
+      "lon": -106.9256
+    },
+    "Lone Pine": {
+      "lat": 36.606,
+      "lon": -118.0631
+    },
+    "Independence": {
+      "lat": 36.8027,
+      "lon": -118.2
+    },
+    "Big Pine": {
+      "lat": 37.1655,
+      "lon": -118.2898
+    },
+    "Bishop": {
+      "lat": 37.3614,
+      "lon": -118.3951
+    },
+    "Mount Shasta": {
+      "lat": 41.3099,
+      "lon": -122.3103
+    },
+    "Weed": {
+      "lat": 41.4227,
+      "lon": -122.3861
+    },
+    "Ashford": {
+      "lat": 46.759,
+      "lon": -122.03
+    }
+  },
+  "trailheads": [
+    {
+      "name": "Maroon Lake TH",
+      "lat": 39.0985,
+      "lon": -106.941,
+      "towns": [
+        "Aspen"
+      ],
+      "peaks": [
+        "Maroon Peak",
+        "North Maroon Peak",
+        "Pyramid Peak"
+      ]
+    },
+    {
+      "name": "Capitol Creek (Ditch) TH",
+      "lat": 39.172,
+      "lon": -107.087,
+      "towns": [
+        "Old Snowmass",
+        "Basalt"
+      ],
+      "peaks": [
+        "Capitol Peak"
+      ]
+    },
+    {
+      "name": "Snowmass Creek TH",
+      "lat": 39.178,
+      "lon": -107.033,
+      "towns": [
+        "Old Snowmass",
+        "Basalt"
+      ],
+      "peaks": [
+        "Snowmass Mountain"
+      ]
+    },
+    {
+      "name": "Montezuma Basin TH (Castle Creek Rd)",
+      "lat": 39.033,
+      "lon": -106.857,
+      "towns": [
+        "Aspen"
+      ],
+      "peaks": [
+        "Castle Peak",
+        "Conundrum Peak"
+      ]
+    },
+    {
+      "name": "Grays Peak TH (Stevens Gulch)",
+      "lat": 39.66,
+      "lon": -105.833,
+      "towns": [
+        "Georgetown",
+        "Silver Plume"
+      ],
+      "peaks": [
+        "Grays Peak",
+        "Torreys Peak"
+      ]
+    },
+    {
+      "name": "Guanella Pass TH",
+      "lat": 39.596,
+      "lon": -105.711,
+      "towns": [
+        "Georgetown",
+        "Grant"
+      ],
+      "peaks": [
+        "Mt. Bierstadt"
+      ]
+    },
+    {
+      "name": "Summit Lake TH (Mt. Blue Sky Rd)",
+      "lat": 39.598,
+      "lon": -105.641,
+      "towns": [
+        "Idaho Springs"
+      ],
+      "peaks": [
+        "Mt. Blue Sky"
+      ]
+    },
+    {
+      "name": "Longs Peak TH",
+      "lat": 40.272,
+      "lon": -105.557,
+      "towns": [
+        "Estes Park"
+      ],
+      "peaks": [
+        "Longs Peak"
+      ]
+    },
+    {
+      "name": "Barr Trail TH",
+      "lat": 38.859,
+      "lon": -104.926,
+      "towns": [
+        "Manitou Springs"
+      ],
+      "peaks": [
+        "Pikes Peak"
+      ]
+    },
+    {
+      "name": "Kite Lake TH",
+      "lat": 39.328,
+      "lon": -106.129,
+      "towns": [
+        "Alma",
+        "Fairplay"
+      ],
+      "peaks": [
+        "Mt. Democrat",
+        "Mt. Cameron",
+        "Mt. Lincoln",
+        "Mt. Bross"
+      ]
+    },
+    {
+      "name": "Fourmile Creek TH (Leavick)",
+      "lat": 39.221,
+      "lon": -106.169,
+      "towns": [
+        "Fairplay",
+        "Alma"
+      ],
+      "peaks": [
+        "Mt. Sherman"
+      ]
+    },
+    {
+      "name": "North Mt. Elbert TH",
+      "lat": 39.15,
+      "lon": -106.411,
+      "towns": [
+        "Leadville",
+        "Twin Lakes"
+      ],
+      "peaks": [
+        "Mt. Elbert"
+      ]
+    },
+    {
+      "name": "Mt. Massive / North Half Moon TH",
+      "lat": 39.156,
+      "lon": -106.418,
+      "towns": [
+        "Leadville"
+      ],
+      "peaks": [
+        "Mt. Massive",
+        "North Massive"
+      ]
+    },
+    {
+      "name": "La Plata Peak TH (Hwy 82)",
+      "lat": 39.073,
+      "lon": -106.464,
+      "towns": [
+        "Twin Lakes",
+        "Leadville"
+      ],
+      "peaks": [
+        "La Plata Peak"
+      ]
+    },
+    {
+      "name": "Half Moon TH (Tigiwon Rd)",
+      "lat": 39.501,
+      "lon": -106.433,
+      "towns": [
+        "Minturn",
+        "Vail"
+      ],
+      "peaks": [
+        "Mt. of the Holy Cross"
+      ]
+    },
+    {
+      "name": "North Cottonwood TH",
+      "lat": 38.893,
+      "lon": -106.25,
+      "towns": [
+        "Buena Vista"
+      ],
+      "peaks": [
+        "Mt. Harvard",
+        "Mt. Columbia"
+      ]
+    },
+    {
+      "name": "Denny Creek TH",
+      "lat": 38.825,
+      "lon": -106.32,
+      "towns": [
+        "Buena Vista"
+      ],
+      "peaks": [
+        "Mt. Yale"
+      ]
+    },
+    {
+      "name": "Mt. Princeton Radio Towers TH",
+      "lat": 38.749,
+      "lon": -106.216,
+      "towns": [
+        "Buena Vista",
+        "Nathrop"
+      ],
+      "peaks": [
+        "Mt. Princeton"
+      ]
+    },
+    {
+      "name": "Baldwin Gulch TH",
+      "lat": 38.672,
+      "lon": -106.246,
+      "towns": [
+        "Nathrop",
+        "Buena Vista"
+      ],
+      "peaks": [
+        "Mt. Antero"
+      ]
+    },
+    {
+      "name": "Blank Cabin TH (Angel of Shavano)",
+      "lat": 38.611,
+      "lon": -106.226,
+      "towns": [
+        "Salida",
+        "Poncha Springs"
+      ],
+      "peaks": [
+        "Mt. Shavano",
+        "Tabeguache Peak"
+      ]
+    },
+    {
+      "name": "Missouri Gulch TH",
+      "lat": 38.993,
+      "lon": -106.382,
+      "towns": [
+        "Granite",
+        "Buena Vista"
+      ],
+      "peaks": [
+        "Mt. Belford",
+        "Mt. Oxford",
+        "Missouri Mountain"
+      ]
+    },
+    {
+      "name": "South Winfield TH",
+      "lat": 38.98,
+      "lon": -106.44,
+      "towns": [
+        "Granite",
+        "Buena Vista"
+      ],
+      "peaks": [
+        "Huron Peak"
+      ]
+    },
+    {
+      "name": "Quandary Peak TH",
+      "lat": 39.387,
+      "lon": -106.056,
+      "towns": [
+        "Breckenridge"
+      ],
+      "peaks": [
+        "Quandary Peak"
+      ]
+    },
+    {
+      "name": "Lake Como Road TH",
+      "lat": 37.572,
+      "lon": -105.488,
+      "towns": [
+        "Fort Garland",
+        "Blanca",
+        "Alamosa"
+      ],
+      "peaks": [
+        "Blanca Peak",
+        "Ellingwood Point",
+        "Little Bear Peak"
+      ]
+    },
+    {
+      "name": "Lily Lake TH (Huerfano)",
+      "lat": 37.582,
+      "lon": -105.42,
+      "towns": [
+        "Gardner",
+        "Walsenburg"
+      ],
+      "peaks": [
+        "Mt. Lindsey"
+      ]
+    },
+    {
+      "name": "South Colony Lakes TH",
+      "lat": 37.978,
+      "lon": -105.45,
+      "towns": [
+        "Westcliffe"
+      ],
+      "peaks": [
+        "Crestone Peak",
+        "Crestone Needle",
+        "Humboldt Peak",
+        "Kit Carson Mountain"
+      ]
+    },
+    {
+      "name": "Willow Lake TH (Crestone)",
+      "lat": 37.995,
+      "lon": -105.693,
+      "towns": [
+        "Crestone"
+      ],
+      "peaks": [
+        "Challenger Pt"
+      ]
+    },
+    {
+      "name": "Cielo Vista Ranch TH",
+      "lat": 37.122,
+      "lon": -105.186,
+      "towns": [
+        "San Luis",
+        "Fort Garland"
+      ],
+      "peaks": [
+        "Culebra Peak"
+      ]
+    },
+    {
+      "name": "Nellie Creek TH",
+      "lat": 38.071,
+      "lon": -107.39,
+      "towns": [
+        "Lake City"
+      ],
+      "peaks": [
+        "Uncompahgre Peak"
+      ]
+    },
+    {
+      "name": "Matterhorn Creek TH",
+      "lat": 38.035,
+      "lon": -107.515,
+      "towns": [
+        "Lake City"
+      ],
+      "peaks": [
+        "Wetterhorn Peak"
+      ]
+    },
+    {
+      "name": "American Basin TH",
+      "lat": 37.928,
+      "lon": -107.504,
+      "towns": [
+        "Lake City",
+        "Silverton"
+      ],
+      "peaks": [
+        "Handies Peak"
+      ]
+    },
+    {
+      "name": "Silver Creek TH (Grizzly Gulch)",
+      "lat": 37.943,
+      "lon": -107.39,
+      "towns": [
+        "Lake City"
+      ],
+      "peaks": [
+        "Redcloud Peak",
+        "Sunshine Peak"
+      ]
+    },
+    {
+      "name": "Stewart Creek TH",
+      "lat": 38.0,
+      "lon": -106.87,
+      "towns": [
+        "Gunnison",
+        "Creede"
+      ],
+      "peaks": [
+        "San Luis Peak"
+      ]
+    },
+    {
+      "name": "Yankee Boy Basin TH",
+      "lat": 38.013,
+      "lon": -107.777,
+      "towns": [
+        "Ouray"
+      ],
+      "peaks": [
+        "Mt. Sneffels"
+      ]
+    },
+    {
+      "name": "Rock of Ages TH (Silver Pick)",
+      "lat": 37.833,
+      "lon": -108.064,
+      "towns": [
+        "Telluride"
+      ],
+      "peaks": [
+        "Wilson Peak"
+      ]
+    },
+    {
+      "name": "Kilpacker TH",
+      "lat": 37.81,
+      "lon": -108.09,
+      "towns": [
+        "Telluride",
+        "Rico"
+      ],
+      "peaks": [
+        "Mt. Wilson",
+        "El Diente"
+      ]
+    },
+    {
+      "name": "Chicago Basin \u2014 Needleton TH (train)",
+      "lat": 37.657,
+      "lon": -107.666,
+      "towns": [
+        "Silverton",
+        "Durango"
+      ],
+      "peaks": [
+        "Sunlight Peak",
+        "Windom Peak",
+        "Mt. Eolus",
+        "North Eolus"
+      ]
+    },
+    {
+      "name": "Whitney Portal TH",
+      "lat": 36.587,
+      "lon": -118.24,
+      "towns": [
+        "Lone Pine"
+      ],
+      "peaks": [
+        "Mt. Whitney",
+        "Mt. Muir",
+        "Mt. Russell"
+      ]
+    },
+    {
+      "name": "Shepherd Pass TH",
+      "lat": 36.69,
+      "lon": -118.28,
+      "towns": [
+        "Independence",
+        "Lone Pine"
+      ],
+      "peaks": [
+        "Mt. Williamson",
+        "Mt. Tyndall"
+      ]
+    },
+    {
+      "name": "Big Pine Creek TH (Glacier Lodge)",
+      "lat": 37.129,
+      "lon": -118.439,
+      "towns": [
+        "Big Pine",
+        "Bishop"
+      ],
+      "peaks": [
+        "North Palisade",
+        "Thunderbolt Peak",
+        "Mt. Sill",
+        "Middle Palisade"
+      ]
+    },
+    {
+      "name": "Red Lake TH",
+      "lat": 37.06,
+      "lon": -118.34,
+      "towns": [
+        "Big Pine"
+      ],
+      "peaks": [
+        "Split Mountain"
+      ]
+    },
+    {
+      "name": "Cottonwood Lakes TH",
+      "lat": 36.452,
+      "lon": -118.169,
+      "towns": [
+        "Lone Pine"
+      ],
+      "peaks": [
+        "Mt. Langley"
+      ]
+    },
+    {
+      "name": "Barcroft Gate TH (White Mtn Rd)",
+      "lat": 37.586,
+      "lon": -118.239,
+      "towns": [
+        "Bishop",
+        "Big Pine"
+      ],
+      "peaks": [
+        "White Mountain Peak"
+      ]
+    },
+    {
+      "name": "Bunny Flat TH",
+      "lat": 41.353,
+      "lon": -122.234,
+      "towns": [
+        "Mount Shasta",
+        "Weed"
+      ],
+      "peaks": [
+        "Mt. Shasta"
+      ]
+    },
+    {
+      "name": "Paradise TH (Camp Muir)",
+      "lat": 46.786,
+      "lon": -121.737,
+      "towns": [
+        "Ashford"
+      ],
+      "peaks": [
+        "Mt. Rainier"
+      ]
+    }
+  ]
+}

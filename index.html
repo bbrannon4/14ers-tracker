@@ -108,6 +108,16 @@
                   <input class="form-check-input" type="checkbox" id="hideDone">
                   <label class="form-check-label small" for="hideDone">Hide fully-summited</label>
                 </div>
+                <hr class="my-2">
+                <h6 class="card-title mb-2">Trip planning</h6>
+                <div class="form-check form-switch mb-2">
+                  <input class="form-check-input" type="checkbox" id="showTrailheads">
+                  <label class="form-check-label small" for="showTrailheads">Show trailheads</label>
+                </div>
+                <div class="form-check form-switch mb-2">
+                  <input class="form-check-input" type="checkbox" id="showTowns">
+                  <label class="form-check-label small" for="showTowns">Show approach towns</label>
+                </div>
                 <button class="btn btn-sm btn-outline-primary w-100" id="fitBtn">Zoom to visible peaks</button>
               </div>
             </div>
@@ -119,6 +129,8 @@
                 <span class="legend-dot ms-2" style="background:var(--partial)"></span>Some summited
                 <span class="legend-dot ms-2" style="background:var(--none)"></span>None summited
                 <span class="legend-dot ms-2" style="background:var(--neutral)"></span>No one selected
+                <span id="legendTH" style="display:none"><span class="legend-dot ms-2" style="background:#2b6cb0"></span>Trailhead</span>
+                <span id="legendTown" style="display:none"><span class="legend-dot ms-2" style="background:#6b46c1"></span>Approach town</span>
               </div>
               <span class="badge text-bg-light border ms-auto stat-pill" id="mapSummary"></span>
             </div>
@@ -140,6 +152,6 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
           integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
   <!-- Bump ?v= whenever app.js changes so browsers fetch the new file. -->
-  <script src="app.js?v=2"></script>
+  <script src="app.js?v=3"></script>
 </body>
 </html>

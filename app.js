@@ -19,9 +19,17 @@ let STATS = new Map();
 // peakSummiters: peak -> Set<hiker> who summited it (Summited? = Yes)
 let SUMMITERS = new Map();
 
-let map, markerLayer;
+// Trailhead / town data (bundled in trailheads.json, GUI-only — not from the sheet).
+let TRAILHEADS = [];         // [{name, lat, lon, towns:[name], peaks:[name]}]
+let TOWNS = {};              // name -> {lat, lon}
+let TH_BY_PEAK = new Map();  // normPeak(peak) -> trailhead object
+
+let map, markerLayer, lineLayer, thLayer, townLayer;
 const selectedHikers = new Set();
 let lbSort = { key: 'unique', dir: -1 };
+
+const TH_COLOR = '#2b6cb0';    // trailhead marker (blue)
+const TOWN_COLOR = '#6b46c1';  // approach-town marker (purple)
 
 // ---- Utilities ----------------------------------------------------------
 // Normalize a peak name so the Hike Register and the 14ers tab join reliably
@@ -78,14 +86,16 @@ function fetchCsv(tab) {
 
 // ---- Data loading -------------------------------------------------------
 async function loadData() {
-  const [peakRows, regRows] = await Promise.all([
+  const [peakRows, regRows, thData] = await Promise.all([
     fetchCsv('14ers'),
     fetchCsv('Hike Register'),
+    fetch('trailheads.json').then((r) => r.json()).catch(() => ({ trailheads: [], towns: {} })),
   ]);
 
   buildPeaks(peakRows);
   buildStats(regRows);
   buildHikerRoster(regRows);
+  buildTrailheads(thData);
 
   document.getElementById('dataStatus').textContent =
     `${PEAKS.length} peaks · ${HIKERS.length} hikers · loaded ${new Date().toLocaleString()}`;
@@ -149,6 +159,15 @@ function buildHikerRoster(regRows) {
   HIKERS = [...names].sort((a, b) => a.localeCompare(b));
 }
 
+function buildTrailheads(data) {
+  TRAILHEADS = (data && data.trailheads) || [];
+  TOWNS = (data && data.towns) || {};
+  TH_BY_PEAK = new Map();
+  for (const th of TRAILHEADS) {
+    for (const pk of (th.peaks || [])) TH_BY_PEAK.set(normPeak(pk), th);
+  }
+}
+
 // ---- Leaderboard --------------------------------------------------------
 function renderLeaderboard() {
   const cmcOnly = document.getElementById('cmcOnlyLb').checked;
@@ -197,7 +216,11 @@ function initMap() {
     maxZoom: 17,
     attribution: '© OpenStreetMap contributors',
   }).addTo(map);
+  // Order matters for z-index: lines under peak dots, trailhead/town dots on top.
+  lineLayer = L.layerGroup().addTo(map);
   markerLayer = L.layerGroup().addTo(map);
+  thLayer = L.layerGroup().addTo(map);
+  townLayer = L.layerGroup().addTo(map);
 }
 
 function visiblePeaks() {
@@ -261,6 +284,73 @@ function renderMap() {
     ? `${peaks.length} peaks shown · select hikers to color them`
     : `${doneAll} / ${peaks.length} shown peaks summited by all ${n} selected`;
   document.getElementById('mapSummary').textContent = summary;
+
+  renderOverlays(peaks);
+}
+
+// Draw trailhead + approach-town markers and their connector lines for the
+// currently-visible peaks, honoring the two filter toggles.
+function renderOverlays(peaks) {
+  lineLayer.clearLayers();
+  thLayer.clearLayers();
+  townLayer.clearLayers();
+
+  const showTH = document.getElementById('showTrailheads').checked;
+  const showTowns = document.getElementById('showTowns').checked;
+  document.getElementById('legendTH').style.display = showTH ? '' : 'none';
+  document.getElementById('legendTown').style.display = showTowns ? '' : 'none';
+  if (!showTH) return;
+
+  const visible = new Set(peaks.map((p) => normPeak(p.peak)));
+
+  // Unique trailheads serving at least one visible peak.
+  const ths = new Map();
+  for (const p of peaks) {
+    const th = TH_BY_PEAK.get(normPeak(p.peak));
+    if (th) ths.set(th.name, th);
+  }
+
+  const drawnTowns = new Set();
+  for (const th of ths.values()) {
+    // Dashed line from each visible peak this trailhead serves to the trailhead.
+    for (const pkName of th.peaks) {
+      if (!visible.has(normPeak(pkName))) continue;
+      const pk = PEAK_BY_NAME.get(normPeak(pkName));
+      if (!pk || !pk.mappable) continue;
+      L.polyline([[pk.lat, pk.lon], [th.lat, th.lon]],
+        { color: '#4a5568', weight: 1.5, opacity: 0.5, dashArray: '4,5' }).addTo(lineLayer);
+    }
+    // Trailhead marker.
+    L.circleMarker([th.lat, th.lon], {
+      radius: 5, color: '#1a202c', weight: 1, fillColor: TH_COLOR, fillOpacity: 1,
+    }).bindTooltip('🅟 ' + th.name, { direction: 'top' })
+      .bindPopup(thPopupHtml(th)).addTo(thLayer);
+
+    // Approach towns: a line per (trailhead, town), each town marker drawn once.
+    if (showTowns) {
+      for (const tname of (th.towns || [])) {
+        const t = TOWNS[tname];
+        if (!t) continue;
+        L.polyline([[th.lat, th.lon], [t.lat, t.lon]],
+          { color: TOWN_COLOR, weight: 1.5, opacity: 0.6, dashArray: '2,6' }).addTo(lineLayer);
+        if (!drawnTowns.has(tname)) {
+          drawnTowns.add(tname);
+          L.circleMarker([t.lat, t.lon], {
+            radius: 5, color: '#1a202c', weight: 1, fillColor: TOWN_COLOR, fillOpacity: 1,
+          }).bindTooltip('🏘 ' + tname, { direction: 'top' })
+            .bindPopup(`<strong>${escapeHtml(tname)}</strong><br><span class="small text-muted">approach town</span>`)
+            .addTo(townLayer);
+        }
+      }
+    }
+  }
+}
+
+function thPopupHtml(th) {
+  return `<strong>${escapeHtml(th.name)}</strong>
+    <div class="small text-muted">Trailhead</div>
+    <div class="small mt-1"><strong>Peaks:</strong> ${th.peaks.map(escapeHtml).join(', ')}</div>
+    <div class="small"><strong>Town${th.towns.length === 1 ? '' : 's'}:</strong> ${th.towns.map(escapeHtml).join(', ')}</div>`;
 }
 
 function popupHtml(p, selArr) {
@@ -276,10 +366,14 @@ function popupHtml(p, selArr) {
     who += `</div>`;
   }
   const total = summiters.size;
+  const th = TH_BY_PEAK.get(normPeak(p.peak));
+  const thLine = th
+    ? `<div class="small mt-1">🥾 ${escapeHtml(th.name)}<br><span class="text-muted">Town${th.towns.length === 1 ? '' : 's'}: ${th.towns.map(escapeHtml).join(', ')}</span></div>`
+    : '';
   return `<strong>${escapeHtml(p.peak)}</strong><br>
     <span class="text-muted small">${escapeHtml(p.range)}${p.range ? ' · ' : ''}${elev}</span>
     <div class="small mt-1">${total} total summiter${total === 1 ? '' : 's'} in the group${p.cmc.toLowerCase() === 'yes' ? ' · CMC 14er' : ''}</div>
-    ${who}`;
+    ${thLine}${who}`;
 }
 
 function fitToVisible() {
@@ -340,6 +434,19 @@ function attachEvents() {
   ['stateFilter', 'cmcOnlyMap', 'hideDone'].forEach((id) =>
     document.getElementById(id).addEventListener('change', renderMap));
   document.getElementById('fitBtn').addEventListener('click', fitToVisible);
+
+  // Trailhead / approach-town overlays. Towns depend on trailheads:
+  // turning towns on forces trailheads on; turning trailheads off clears towns.
+  const showTH = document.getElementById('showTrailheads');
+  const showTowns = document.getElementById('showTowns');
+  showTH.addEventListener('change', () => {
+    if (!showTH.checked) showTowns.checked = false;
+    renderMap();
+  });
+  showTowns.addEventListener('change', () => {
+    if (showTowns.checked) showTH.checked = true;
+    renderMap();
+  });
 
   // Map tab needs a size invalidation when first shown (Leaflet quirk in hidden divs).
   document.getElementById('tab-map').addEventListener('shown.bs.tab', () => {
