@@ -16,7 +16,17 @@
     .hiker-list .form-check { margin-bottom:.15rem; }
     .legend-dot { display:inline-block; width:14px; height:14px; border-radius:50%; margin-right:6px; vertical-align:middle; border:1px solid rgba(0,0,0,.35); }
     .shape-marker { background:none; border:0; }
+    .mk-wrap { background:none; border:0; }
+    .mk { display:flex; align-items:center; justify-content:center; box-sizing:border-box; color:#fff; border:1.5px solid #1a202c; }
+    .mk-th { width:22px; height:22px; background:#2b6cb0; border-radius:3px; font:700 10px/1 system-ui,sans-serif; letter-spacing:.5px; }
     .lg { vertical-align:middle; margin-right:3px; }
+    /* Permanent marker labels, gated by zoom via classes on the map container. */
+    .leaflet-tooltip.mlabel { background:rgba(255,255,255,.82); border:0; box-shadow:none; padding:0 4px; border-radius:4px; color:#1a202c; font:600 11px/1.5 system-ui,sans-serif; white-space:nowrap; }
+    .leaflet-tooltip.mlabel::before { display:none !important; }
+    .mlabel { display:none; }
+    .leaflet-container.lz-peak .mlabel-peak { display:block; }
+    .leaflet-container.lz-th .mlabel-th { display:block; }
+    .leaflet-container.lz-town .mlabel-town { display:block; }
     .leaflet-popup-content { margin:10px 12px; }
     table.leaderboard td, table.leaderboard th { vertical-align:middle; }
     th.sortable { cursor:pointer; user-select:none; white-space:nowrap; }
@@ -131,8 +141,8 @@
                 <svg width="12" height="12" viewBox="0 0 12 12" class="lg ms-2"><polygon points="6,1 11,11 1,11" fill="#f9a825" stroke="rgba(0,0,0,.4)"/></svg>Some summited
                 <svg width="12" height="12" viewBox="0 0 12 12" class="lg ms-2"><polygon points="6,1 11,11 1,11" fill="#c62828" stroke="rgba(0,0,0,.4)"/></svg>None summited
                 <svg width="12" height="12" viewBox="0 0 12 12" class="lg ms-2"><polygon points="6,1 11,11 1,11" fill="#6c757d" stroke="rgba(0,0,0,.4)"/></svg>No one selected
-                <span id="legendTH" style="display:none"><svg width="12" height="12" viewBox="0 0 12 12" class="lg ms-2"><rect x="1" y="1" width="10" height="10" fill="#2b6cb0" stroke="rgba(0,0,0,.4)"/></svg>Trailhead</span>
-                <span id="legendTown" style="display:none"><svg width="12" height="12" viewBox="0 0 12 12" class="lg ms-2"><polygon points="6,1 11,6 6,11 1,6" fill="#6b46c1" stroke="rgba(0,0,0,.4)"/></svg>Approach town</span>
+                <span id="legendTH" style="display:none"><svg width="13" height="13" viewBox="0 0 13 13" class="lg ms-2"><rect x="0.5" y="0.5" width="12" height="12" rx="2" fill="#2b6cb0" stroke="rgba(0,0,0,.4)"/><text x="6.5" y="9.5" text-anchor="middle" fill="#fff" font-size="7" font-weight="700" font-family="system-ui,sans-serif">TH</text></svg>Trailhead</span>
+                <span id="legendTown" style="display:none"><svg width="13" height="13" viewBox="0 0 13 13" class="lg ms-2"><circle cx="6.5" cy="6.5" r="6" fill="#6b46c1" stroke="rgba(0,0,0,.4)"/><rect x="4" y="3.8" width="5" height="5.6" fill="#fff"/></svg>Approach town</span>
               </div>
               <span class="badge text-bg-light border ms-auto stat-pill" id="mapSummary"></span>
             </div>
@@ -154,6 +164,6 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
           integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
   <!-- Bump ?v= whenever app.js changes so browsers fetch the new file. -->
-  <script src="app.js?v=6"></script>
+  <script src="app.js?v=8"></script>
 </body>
 </html>

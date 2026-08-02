@@ -223,6 +223,7 @@ function initMap() {
   markerLayer = L.layerGroup().addTo(map);
   thLayer = L.layerGroup().addTo(map);
   townLayer = L.layerGroup().addTo(map);
+  map.on('zoomend', updateLabelVisibility);
 }
 
 function visiblePeaks() {
@@ -282,9 +283,57 @@ function shapeIcon(shape, color, size) {
   });
 }
 
+// Trailhead icon: a blue square labelled "TH".
+function thIcon() {
+  return L.divIcon({
+    html: '<div class="mk mk-th">TH</div>', className: 'mk-wrap',
+    iconSize: [22, 22], iconAnchor: [11, 11], popupAnchor: [0, -12], tooltipAnchor: [0, -12],
+  });
+}
+
+// Town icon: a building glyph inside a purple circle.
+function townIcon() {
+  const c = TOWN_COLOR;
+  const svg = `<svg width="22" height="22" viewBox="0 0 22 22" style="display:block">
+    <circle cx="11" cy="11" r="9.5" fill="${c}" stroke="#1a202c" stroke-width="1.5"/>
+    <rect x="7" y="6.3" width="8" height="9.4" fill="#fff"/>
+    <rect x="8.3" y="7.8" width="1.6" height="1.6" fill="${c}"/>
+    <rect x="12.1" y="7.8" width="1.6" height="1.6" fill="${c}"/>
+    <rect x="8.3" y="10.4" width="1.6" height="1.6" fill="${c}"/>
+    <rect x="12.1" y="10.4" width="1.6" height="1.6" fill="${c}"/>
+    <rect x="10.2" y="12.8" width="1.6" height="2.9" fill="${c}"/>
+  </svg>`;
+  return L.divIcon({
+    html: svg, className: 'mk-wrap',
+    iconSize: [22, 22], iconAnchor: [11, 11], popupAnchor: [0, -12], tooltipAnchor: [0, -12],
+  });
+}
+
+// Permanent marker labels are shown only past these zoom levels (via CSS classes
+// toggled on the map container) so the fully-zoomed-out view stays uncluttered.
+const LABEL_ZOOM = { peak: 8, th: 11, town: 11 };
+function updateLabelVisibility() {
+  if (!map) return;
+  const z = map.getZoom();
+  const c = map.getContainer();
+  c.classList.toggle('lz-peak', z >= LABEL_ZOOM.peak);
+  c.classList.toggle('lz-th', z >= LABEL_ZOOM.th);
+  c.classList.toggle('lz-town', z >= LABEL_ZOOM.town);
+}
+
+// Clear a layer group, unbinding tooltips/popups first so permanent labels
+// don't leak orphaned DOM nodes on each re-render.
+function clearGroup(group) {
+  group.eachLayer((m) => {
+    if (m.unbindTooltip) m.unbindTooltip();
+    if (m.unbindPopup) m.unbindPopup();
+  });
+  group.clearLayers();
+}
+
 function renderMap() {
   if (!map) return;
-  markerLayer.clearLayers();
+  clearGroup(markerLayer);
   const peaks = visiblePeaks();
   const n = selectedHikers.size;
   const selArr = [...selectedHikers];
@@ -296,7 +345,7 @@ function renderMap() {
     const color = colorFor(done, n);
     const marker = L.marker([p.lat, p.lon], { icon: shapeIcon('triangle', color, 15) });
     marker.bindPopup(popupHtml(p, selArr));
-    marker.bindTooltip(p.peak, { direction: 'top' });
+    marker.bindTooltip(p.peak, { permanent: true, direction: 'top', offset: [0, -6], className: 'mlabel mlabel-peak' });
     markerLayer.addLayer(marker);
   }
 
@@ -306,14 +355,15 @@ function renderMap() {
   document.getElementById('mapSummary').textContent = summary;
 
   renderOverlays(peaks);
+  updateLabelVisibility();
 }
 
 // Draw trailhead + approach-town markers and their connector lines for the
 // currently-visible peaks, honoring the two filter toggles.
 function renderOverlays(peaks) {
   lineLayer.clearLayers();
-  thLayer.clearLayers();
-  townLayer.clearLayers();
+  clearGroup(thLayer);
+  clearGroup(townLayer);
 
   const showTH = document.getElementById('showTrailheads').checked;
   const showTowns = document.getElementById('showTowns').checked;
@@ -341,9 +391,9 @@ function renderOverlays(peaks) {
       L.polyline([[pk.lat, pk.lon], [th.lat, th.lon]],
         { color: '#4a5568', weight: 1.6, opacity: 0.55, dashArray: '7,6' }).addTo(lineLayer);
     }
-    // Trailhead marker (square).
-    L.marker([th.lat, th.lon], { icon: shapeIcon('square', TH_COLOR, 13) })
-      .bindTooltip('🅟 ' + th.name, { direction: 'top' })
+    // Trailhead marker: "TH" square, with a zoom-revealed name label.
+    L.marker([th.lat, th.lon], { icon: thIcon() })
+      .bindTooltip(th.name, { permanent: true, direction: 'top', offset: [0, -4], className: 'mlabel mlabel-th' })
       .bindPopup(thPopupHtml(th)).addTo(thLayer);
 
     // Approach towns: a line per (trailhead, town), each town marker drawn once.
@@ -356,8 +406,8 @@ function renderOverlays(peaks) {
           { color: TOWN_COLOR, weight: 2.2, opacity: 0.75, dashArray: '1,9', lineCap: 'round' }).addTo(lineLayer);
         if (!drawnTowns.has(tname)) {
           drawnTowns.add(tname);
-          L.marker([t.lat, t.lon], { icon: shapeIcon('diamond', TOWN_COLOR, 13) })
-            .bindTooltip('🏘 ' + tname, { direction: 'top' })
+          L.marker([t.lat, t.lon], { icon: townIcon() })
+            .bindTooltip(tname, { permanent: true, direction: 'top', offset: [0, -4], className: 'mlabel mlabel-town' })
             .bindPopup(`<strong>${escapeHtml(tname)}</strong><br><span class="small text-muted">approach town</span>`)
             .addTo(townLayer);
         }
